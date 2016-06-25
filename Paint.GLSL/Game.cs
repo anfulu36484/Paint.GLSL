@@ -35,10 +35,16 @@ namespace Paint.GLSL
                 //window.SetFramerateLimit((uint) FrameRateLimit);
                 // Set up events
                 window.Closed += OnClosed;
+                window.Resized += Window_Resized;
             }
             else
                 RenderTexture = new RenderTexture(Size.X, Size.Y);
          
+        }
+
+        private void Window_Resized(object sender, SizeEventArgs e)
+        {
+            Size = window.Size;
         }
 
         public abstract void Load();
@@ -91,8 +97,8 @@ namespace Paint.GLSL
 
                 FPS = 1/(float)_stopwatch.ElapsedMilliseconds*1000;
 
-                Console.WriteLine($"FPS {FPS:#.#}   count = {_index}");
 
+                window.SetTitle($"FPS {FPS:#}");
                 _stopwatch.Restart();
             }
         }

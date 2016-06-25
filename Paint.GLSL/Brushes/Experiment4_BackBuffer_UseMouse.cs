@@ -52,9 +52,10 @@ namespace SFML_shaders_experiments.Experiment4_BackBuffer
             _rState.Texture = _texture;
 
             _backTexture = new RenderTexture(Size.X, Size.Y);
-
+            sizeStart = Size.ConvertToVector2f();
         }
 
+        private Vector2f sizeStart;
 
         public override void Update()
         {
@@ -62,6 +63,7 @@ namespace SFML_shaders_experiments.Experiment4_BackBuffer
             _shader.SetParameter("texture",_backTexture.Texture);
             _shader.SetParameter("mouse",Mouse.GetPosition(window).ConvertToVector2f());
             _shader.SetParameter("size", _mainWindow.size);
+            _shader.SetParameter("resolution", new Vector2f(Size.X, Size.Y));
             _time += 0.005f;
         }
 
