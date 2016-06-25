@@ -1,0 +1,20 @@
+﻿<Window x:Class="Paint.GLSL.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Paint.GLSL"
+        mc:Ignorable="d"
+        Title="Brushes" Height="400" Width="250" Loaded="OnLoaded">
+    <Grid>
+        <StackPanel>
+            <Label Content="Brushes" Margin="10,0"/>
+            <ComboBox x:Name="BrushesComboBox" Margin="10,0,10,10" />
+            <Label  Content="Size" Margin="10,0"/>
+            <TextBox x:Name="SizeTextBox" Margin="10,0,10,10" Height="23" TextWrapping="Wrap" Text="10" TextChanged="OnTextChanged"/>
+
+
+
+        </StackPanel>
+    </Grid>
+</Window>
