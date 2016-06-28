@@ -5,16 +5,27 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Paint.GLSL"
         mc:Ignorable="d"
-        Title="Brushes" Height="400" Width="250" Loaded="OnLoaded">
+        Title="Brushes" Height="400" Width="250" Loaded="OnLoaded" Left="0" Top="0" Topmost="True">
     <Grid>
         <StackPanel>
             <Label Content="Brushes" Margin="10,0"/>
             <ComboBox x:Name="BrushesComboBox" Margin="10,0,10,10" />
-            <Label  Content="Size" Margin="10,0"/>
-            <TextBox x:Name="SizeTextBox" Margin="10,0,10,10" Height="23" TextWrapping="Wrap" Text="10" TextChanged="OnTextChanged"/>
+            <StackPanel Orientation="Horizontal">
+                <Label  Content="Size" Margin="10,0,0,10"/>
+                <TextBox x:Name="SizeTextBox" Margin="10,0,10,10" Height="22" TextWrapping="Wrap" Text="10" 
+                         TextChanged="OnSizeChanged" Width="56"/>
+            </StackPanel>
 
 
-
+            <StackPanel Orientation="Horizontal">
+                <Label  Content="Color" Margin="10,0,10,10"/>
+                <Label  Content="R" Margin="0,0,0,10"/>
+                <TextBox x:Name="ColorTextBoxRed" Margin="0,0,0,10" Height="22" TextWrapping="Wrap" Text="120" Width="30" TextChanged="OnColorChanged" />
+                <Label  Content="G" Margin="0,0,0,10"/>
+                <TextBox x:Name="ColorTextBoxGreen" Margin="0,0,0,10" Height="23" TextWrapping="Wrap" Text="120" Width="30" TextChanged="OnColorChanged"/>
+                <Label  Content="B" Margin="0,0,0,10"/>
+                <TextBox x:Name="ColorTextBoxBlue" Margin="0,0,10,10" Height="23" TextWrapping="Wrap" Text="120" Width="30" TextChanged="OnColorChanged"/>
+            </StackPanel>
         </StackPanel>
     </Grid>
 </Window>

@@ -83,7 +83,13 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Brushes\Experiment4_BackBuffer_UseMouse.cs" />
+    <Compile Include="Brushes\Brush5.cs" />
+    <Compile Include="Brushes\Brush4.cs" />
+    <Compile Include="Brushes\Brush3.cs" />
+    <Compile Include="Brushes\Brush2.cs" />
+    <Compile Include="Brushes\Brush.cs" />
+    <Compile Include="Brushes\Star.cs" />
+    <Compile Include="Canvas.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="Helper.cs" />
     <Compile Include="MainWindow.xaml.cs">
@@ -106,7 +112,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="packages.config" />
@@ -115,12 +121,6 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
-    <None Include="shaders\BackBuffer1.frag">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="shaders\VertexShader.vert">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

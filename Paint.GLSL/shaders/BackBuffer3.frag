@@ -21,7 +21,7 @@ void main( void ) {
 
 
 
-	vec4 color = vec4( xx,xx*0.4,xx*0.2, 1.0 );
+	vec4 color = vec4( xx*sin(cos(time)),xx*cos(time*xx),xx*sin(time), 1.0 );
 	
 	
 	vec2 coord = gl_TexCoord[0].st;

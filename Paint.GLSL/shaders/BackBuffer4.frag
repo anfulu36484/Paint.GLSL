@@ -16,12 +16,12 @@ void main( void ) {
 	
 	float k = time*.07;
 	
+	for(float i=0.0;i<100.0;i+=1.0)
+		xx+=(1.6*i)/length(vec2(p.x-i*100*cos(i*time)*cos(i),p.y-i*100*sin(i*time)*cos(i))); 
 
-	xx+=(1.6)/length(vec2(p.x,p.y)); 
 
 
-
-	vec4 color = vec4( xx,xx*0.4,xx*0.2, 1.0 );
+	vec4 color = vec4( xx*sin(cos(time)),xx*sin(xx*time),xx*sin(time), 1.0 );
 	
 	
 	vec2 coord = gl_TexCoord[0].st;

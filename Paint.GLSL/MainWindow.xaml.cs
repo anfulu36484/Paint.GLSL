@@ -12,7 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using SFML_shaders_experiments.Experiment4_BackBuffer;
+using Paint.GLSL.Brushes;
+using SFML.Graphics;
 
 namespace Paint.GLSL
 {
@@ -36,17 +37,42 @@ namespace Paint.GLSL
             BrushesComboBox.Items.Add("Test");
             task = Task.Factory.StartNew(() =>
             {
-                Game game = new Experiment4_BackBuffer_SetMousePositon(RenderTo.Window, this);
+                //Game game = new Experiment4_BackBuffer_SetMousePositon(RenderTo.Window, this);
+                Game game = new Brush5(RenderTo.Window, this);
                 game.Run();
             });
         }
 
-        public int size;
+        public float size;
+        public SFML.Graphics.Color color;
 
-        private void OnTextChanged(object sender, TextChangedEventArgs e)
+        private void OnSizeChanged(object sender, TextChangedEventArgs e)
         {
+            try
+            {
+                size =(float) Convert.ToDouble(SizeTextBox.Text);
+            }
+            catch (Exception)
+            {
+                size = (float)Convert.ToDouble(e.UndoAction); 
+            }
+            
+        }
 
-            size = Convert.ToInt32(SizeTextBox.Text);
+        private void OnColorChanged(object sender, TextChangedEventArgs e)
+        {
+            try
+            {
+                color = new SFML.Graphics.Color(
+                Convert.ToByte(ColorTextBoxRed.Text),
+                Convert.ToByte(ColorTextBoxGreen.Text),
+                Convert.ToByte(ColorTextBoxBlue.Text));
+            }
+            catch (Exception)
+            {
+
+            }
+            
         }
     }
 }

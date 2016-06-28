@@ -1,11 +1,9 @@
-﻿using System.Windows.Forms;
-using Paint.GLSL;
-//using System.Windows.Input;
-using SFML.Graphics;
+﻿using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
 
-namespace SFML_shaders_experiments.Experiment4_BackBuffer
+
+namespace Paint.GLSL.Brushes
 {
     class Experiment4_BackBuffer_SetMousePositon : Game
     {
@@ -46,17 +44,14 @@ namespace SFML_shaders_experiments.Experiment4_BackBuffer
 
             _shader.SetParameter("time", _time);
             _shader.SetParameter("resolution",new Vector2f(Size.X, Size.Y));
-            //_shader.SetParameter("size",10.0f);
             _shader.SetParameter("size", _mainWindow.size);
             _rState = new RenderStates(_shader);
             _rState.Texture = _texture;
 
             _backTexture = new RenderTexture(Size.X, Size.Y);
-            sizeStart = Size.ConvertToVector2f();
         }
 
-        private Vector2f sizeStart;
-
+ 
         public override void Update()
         {
             _shader.SetParameter("time", _time);
@@ -64,6 +59,7 @@ namespace SFML_shaders_experiments.Experiment4_BackBuffer
             _shader.SetParameter("mouse",Mouse.GetPosition(window).ConvertToVector2f());
             _shader.SetParameter("size", _mainWindow.size);
             _shader.SetParameter("resolution", new Vector2f(Size.X, Size.Y));
+
             _time += 0.005f;
         }
 
