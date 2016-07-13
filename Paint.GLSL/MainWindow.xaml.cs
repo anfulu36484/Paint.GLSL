@@ -35,12 +35,12 @@ namespace Paint.GLSL
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
             BrushesComboBox.Items.Add("Test");
-            task = Task.Factory.StartNew(() =>
+            /*task = Task.Factory.StartNew(() =>
             {
                 //Game game = new Experiment4_BackBuffer_SetMousePositon(RenderTo.Window, this);
                 Game game = new Brush5(RenderTo.Window, this);
                 game.Run();
-            });
+            });*/
         }
 
         public float size;
@@ -74,5 +74,29 @@ namespace Paint.GLSL
             }
             
         }
+
+        private void CreateNewWindowButton_Click(object sender, RoutedEventArgs e)
+        {
+            SizeDialogWindow sizeDialogWindow = new SizeDialogWindow();
+            sizeDialogWindow.Show();
+            sizeDialogWindow.OkButton.Click += (send, eventsArg) =>
+            {
+                int width = 0;
+                int height = 0;
+
+                try{ width = Convert.ToInt32(sizeDialogWindow.WidthTextBox.Text) ; } catch { }
+                try { height = Convert.ToInt32(sizeDialogWindow.HeightTextBox.Text); } catch { }
+
+
+                Task.Factory.StartNew(() =>
+                {
+                    //Game game = new Experiment4_BackBuffer_SetMousePositon(RenderTo.Window, this);
+                    Game game = new Brush5(RenderTo.Window, this);
+                    game.Run();
+                });
+                sizeDialogWindow.Close();
+            };
+        }
+
     }
 }

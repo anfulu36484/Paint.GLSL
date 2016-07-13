@@ -29,7 +29,7 @@ namespace Paint.GLSL
 
             if (RenderTo == RenderTo.Window)
             {
-                this.window = new RenderWindow(new VideoMode(width, height), title, Styles.Resize);
+                this.window = new RenderWindow(new VideoMode(width, height), title, Styles.Default);
                 window.SetActive(true);
                 window.Position = new Vector2i(window.Position.X, 0);
                 //window.SetFramerateLimit((uint) FrameRateLimit);
@@ -44,7 +44,9 @@ namespace Paint.GLSL
 
         private void Window_Resized(object sender, SizeEventArgs e)
         {
-            Size = window.Size;
+            window.Size = Size;
+
+            //Size = window.Size;
         }
 
         public abstract void Load();
