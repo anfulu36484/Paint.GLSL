@@ -3,73 +3,41 @@ using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
 
-
 namespace Paint.GLSL.Brushes
 {
-    class Brush : Game
+    class Brush :BrushBase
     {
-        private readonly MainWindow _mainWindow;
-
-        public Brush(RenderTo render,MainWindow mainWindow) 
-            : base(1500, 800, "Brush", Color.Blue,render)
-        {
-            _mainWindow = mainWindow;
-        }
-
-        private Texture _texture;
-        private RectangleShape _rectangleShape;
-
+        private readonly Canvas _canvas;
         private Shader _shader;
 
         private float _time;
 
-        private RenderStates _rState;
-
-
-        private RenderTexture _backTexture;
-
-        public override void Load()
+        public Brush(Canvas canvas, string name, byte[] fragShader)
         {
+            Name = name;
 
-        }
-
-        public override void Initialize()
-        {
-            _texture = new Texture(Size.X, Size.Y);
-
-            _rectangleShape = new RectangleShape(new Vector2f(Size.X, Size.Y));
-            _rectangleShape.Texture = _texture;
-
+            _canvas = canvas;
             _shader = new Shader(new MemoryStream(Properties.Resources.VertexShader),
-                new MemoryStream(Properties.Resources.BackBuffer1));
+                new MemoryStream(fragShader));
 
             _shader.SetParameter("time", _time);
-            _shader.SetParameter("resolution",new Vector2f(Size.X, Size.Y));
-            _shader.SetParameter("size", _mainWindow.size);
-            _rState = new RenderStates(_shader);
-            _rState.Texture = _texture;
-
-            _backTexture = new RenderTexture(Size.X, Size.Y);
-            sizeStart = Size.ConvertToVector2f();
+            _shader.SetParameter("resolution", new Vector2f(_canvas.Size.X, _canvas.Size.Y));
+            _shader.SetParameter("size", _canvas.MainWindow.size);
+            RenderStates = new RenderStates(_shader);
+            RenderStates.Texture = _canvas.Texture;
         }
-
-        private Vector2f sizeStart;
 
         public override void Update()
         {
             _shader.SetParameter("time", _time);
-            _shader.SetParameter("texture",_backTexture.Texture);
-            _shader.SetParameter("mouse",Mouse.GetPosition(window).ConvertToVector2f());
-            _shader.SetParameter("size", _mainWindow.size);
-            _shader.SetParameter("resolution", new Vector2f(Size.X, Size.Y));
+            _shader.SetParameter("texture", _canvas.BackTexture.Texture);
+            _shader.SetParameter("mouse", Mouse.GetPosition(_canvas.window).ConvertToVector2f());
+            _shader.SetParameter("size", _canvas.MainWindow.size);
+            _shader.SetParameter("resolution", new Vector2f(_canvas.Size.X, _canvas.Size.Y));
+            _shader.SetParameter("input_color", _canvas.MainWindow.color);
             _time += 0.005f;
         }
 
-        public override void Render()
-        {
-             window.Draw(_rectangleShape, _rState);
-             if (Mouse.IsButtonPressed(Mouse.Button.Left))
-                 _backTexture.Draw(_rectangleShape, _rState);
-        }
+
     }
 }

@@ -75,6 +75,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Brushes\Brush.cs" />
+    <Compile Include="Brushes\BrushBase.cs" />
     <Compile Include="SizeDialogWindow.xaml.cs">
       <DependentUpon>SizeDialogWindow.xaml</DependentUpon>
     </Compile>
@@ -86,12 +88,6 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Brushes\Brush5.cs" />
-    <Compile Include="Brushes\Brush4.cs" />
-    <Compile Include="Brushes\Brush3.cs" />
-    <Compile Include="Brushes\Brush2.cs" />
-    <Compile Include="Brushes\Brush.cs" />
-    <Compile Include="Brushes\Star.cs" />
     <Compile Include="Canvas.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="Helper.cs" />
@@ -132,6 +128,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Baseclass.Contrib.Nuget.Output.1.0.0\build\net40\Baseclass.Contrib.Nuget.Output.targets" Condition="Exists('..\packages\Baseclass.Contrib.Nuget.Output.1.0.0\build\net40\Baseclass.Contrib.Nuget.Output.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
