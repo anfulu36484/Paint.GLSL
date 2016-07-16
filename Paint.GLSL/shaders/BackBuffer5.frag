@@ -9,7 +9,7 @@ void main( void ) {
 
 	vec2 p =  gl_FragCoord.xy -vec2(mouse.x,resolution.y-mouse.y);
 
-	p*=size;
+	p*=size*5.0;
 
 
 	float xx = 0.0;

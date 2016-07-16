@@ -56,6 +56,7 @@ namespace Paint.GLSL
             _rectangleShape = new RectangleShape(new Vector2f(Size.X, Size.Y));
             _rectangleShape.Texture = Texture;
 
+            
             BackHistory = new Stack<RenderTexture>();
             BackHistory.Push(new RenderTexture(Size.X, Size.Y));
             ForwardHistory = new Stack<RenderTexture>();
@@ -78,9 +79,10 @@ namespace Paint.GLSL
             {
                 RenderTexture renderTexture = new RenderTexture(Size.X, Size.Y);
 
+           
+            
                 Texture texture = BackHistory.Peek().Texture;
 
-                
                 RenderStates renderStates = new RenderStates(_turnShader);
                 renderStates.Texture = texture;
 
@@ -91,6 +93,8 @@ namespace Paint.GLSL
 
                 BackHistory.Push(renderTexture);
                 ForwardHistory.Clear();
+
+    
             }
         }
 

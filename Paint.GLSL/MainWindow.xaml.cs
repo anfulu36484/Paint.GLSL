@@ -95,7 +95,7 @@ namespace Paint.GLSL
                         new Brushes.Brush(canvas,"Brush3",Properties.Resources.BackBuffer3),
                         new Brushes.Brush(canvas,"Brush4",Properties.Resources.BackBuffer4),
                         new Brushes.Brush(canvas,"Brush5",Properties.Resources.BackBuffer5),
-                        new Brushes.Brush(canvas,"Brush5",Properties.Resources.BackBuffer6)
+                        new Brushes.Brush(canvas,"Brush6",Properties.Resources.BackBuffer6)
                     };
 
                     Dispatcher.Invoke(() =>
