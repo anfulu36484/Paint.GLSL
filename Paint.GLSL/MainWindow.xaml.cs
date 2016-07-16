@@ -66,6 +66,9 @@ namespace Paint.GLSL
             
         }
 
+
+
+
         private void  CreateNewWindowButton_Click(object sender, RoutedEventArgs e)
         {
             SizeDialogWindow sizeDialogWindow = new SizeDialogWindow();
@@ -99,11 +102,15 @@ namespace Paint.GLSL
 
                     Dispatcher.Invoke(() =>
                     {
-                        foreach (var brush in brushesCollection)
+
+                        if (BrushesComboBox.Items.Count == 0)
                         {
-                            BrushesComboBox.Items.Add(brush.Name);
+                            foreach (var brush in brushesCollection)
+                            {
+                                BrushesComboBox.Items.Add(brush.Name);
+                            }
+                            BrushesComboBox.SelectedIndex = 0;
                         }
-                        BrushesComboBox.SelectedIndex = 0;
                     });
                     canvas.AddBrushes(brushesCollection);
                     canvas.Run();
