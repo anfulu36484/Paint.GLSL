@@ -9,6 +9,13 @@
     <Grid>
         <StackPanel>
             <Button Name="CreateNewWindowButton" Margin="10,10,10,10" Click="CreateNewWindowButton_Click" >Create new window</Button>
+            
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Image Name="UndoImage" Source="Resources/undo.png" Width="50" Height="30" />
+                <Image Name="RendoImage" Source="Resources/rendo.png" Width="50" Height="30"></Image>
+            </StackPanel>
+            
+            
             <Label Content="Brushes" Margin="10,0"/>
             <ComboBox x:Name="BrushesComboBox" Margin="10,0,10,10" />
             <StackPanel Orientation="Horizontal">

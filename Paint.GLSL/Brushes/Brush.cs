@@ -30,7 +30,7 @@ namespace Paint.GLSL.Brushes
         public override void Update()
         {
             _shader.SetParameter("time", _time);
-            _shader.SetParameter("texture", _canvas.BackTexture.Texture);
+            _shader.SetParameter("texture", _canvas.BackHistory.Peek().Texture);
             _shader.SetParameter("mouse", Mouse.GetPosition(_canvas.window).ConvertToVector2f());
             _shader.SetParameter("size", _canvas.MainWindow.size);
             _shader.SetParameter("resolution", new Vector2f(_canvas.Size.X, _canvas.Size.Y));

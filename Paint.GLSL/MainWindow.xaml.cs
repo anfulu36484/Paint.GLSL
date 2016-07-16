@@ -27,8 +27,6 @@ namespace Paint.GLSL
             InitializeComponent();
         }
 
-        private Task task;
-
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
             //BrushesComboBox.Items.Add("");
@@ -67,7 +65,7 @@ namespace Paint.GLSL
         }
 
 
-
+        public static volatile List<IntPtr> Handles = new List<IntPtr>();
 
         private void  CreateNewWindowButton_Click(object sender, RoutedEventArgs e)
         {
@@ -113,6 +111,8 @@ namespace Paint.GLSL
                         }
                     });
                     canvas.AddBrushes(brushesCollection);
+                    Handles.Add(canvas.window.SystemHandle);
+
                     canvas.Run();
                 });
                 sizeDialogWindow.Close();

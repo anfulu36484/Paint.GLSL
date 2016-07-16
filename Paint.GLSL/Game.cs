@@ -42,6 +42,8 @@ namespace Paint.GLSL
          
         }
 
+
+
         private void Window_Resized(object sender, SizeEventArgs e)
         {
             window.Size = Size;
