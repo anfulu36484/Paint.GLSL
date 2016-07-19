@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Documents;
@@ -25,13 +27,16 @@ namespace Paint.GLSL
 
         public readonly MainWindow MainWindow;
 
-        public Texture Texture;
+        public RenderTexture RenderTexture;
+
         private RectangleShape _rectangleShape;
 
         private BrushBase _brush;
 
-        public Stack<RenderTexture> BackHistory;
-        public Stack<RenderTexture> ForwardHistory; 
+        public Stack<Texture> BackHistory;
+        public Stack<Texture> ForwardHistory;
+
+        public Texture Texture;
 
         public Canvas(uint width, uint height, MainWindow mainWindow) 
             : base(width, height, "Canvas", Color.White, RenderTo.Window)
@@ -43,7 +48,7 @@ namespace Paint.GLSL
 
             window.MouseButtonReleased += Window_MouseButtonReleased;
 
-            
+            Texture = new Texture(Size.X, Size.Y);
         }
 
         private Shader _turnShader;
@@ -51,19 +56,22 @@ namespace Paint.GLSL
 
         public override void Initialize()
         {
-            Texture = new Texture(Size.X, Size.Y);
+            BackHistory = new Stack<Texture>();
+            BackHistory.Push(Texture);
+
+            ForwardHistory = new Stack<Texture>();
+            
+            RenderTexture = new RenderTexture(Size.X, Size.Y);
 
             _rectangleShape = new RectangleShape(new Vector2f(Size.X, Size.Y));
             _rectangleShape.Texture = Texture;
 
-            
-            BackHistory = new Stack<RenderTexture>();
-            BackHistory.Push(new RenderTexture(Size.X, Size.Y));
-            ForwardHistory = new Stack<RenderTexture>();
             _brush = _brushes[0];
 
             _turnShader = new Shader(new MemoryStream(Properties.Resources.VertexShader),
                 new MemoryStream(Properties.Resources.Turn));
+
+
 
             Window_MouseButtonReleased(null, new MouseButtonEventArgs(new MouseButtonEvent())
             {
@@ -72,42 +80,72 @@ namespace Paint.GLSL
 
         }
 
-
+        private int index;
         private void Window_MouseButtonReleased(object sender, MouseButtonEventArgs e)
         {
             if (e.Button == Mouse.Button.Left)
             {
-                RenderTexture renderTexture = new RenderTexture(Size.X, Size.Y);
-
-           
-            
-                Texture texture = BackHistory.Peek().Texture;
-
-                RenderStates renderStates = new RenderStates(_turnShader);
-                renderStates.Texture = texture;
-
-                _rectangleShape.Texture = BackHistory.Peek().Texture;
-
-                _turnShader.SetParameter("texture", texture);
-                renderTexture.Draw(_rectangleShape,renderStates);
-
-                BackHistory.Push(renderTexture);
+                
+                Texture texture = new Texture(RenderTexture.Texture);
+                
+                BackHistory.Push(texture);
                 ForwardHistory.Clear();
 
+                for (int i = 0; i < ForwardHistory.Count; i++)
+                {
+                    Texture t = ForwardHistory.Pop();
+                    t.Dispose();
+                }
     
             }
         }
 
         private void RendoImage_MouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            if(/*!IsTherewindowAboveGivenWindow() & */ForwardHistory.Count>0)
+            if ( /*!IsTherewindowAboveGivenWindow() & */ForwardHistory.Count > 0)
+            {
                 BackHistory.Push(ForwardHistory.Pop());
+
+
+                Texture texture = BackHistory.Peek();
+
+                _turnShader.SetParameter("texture", texture);
+
+                RenderStates renderStates = new RenderStates(_turnShader);
+                renderStates.Texture = Texture;
+
+                RectangleShape rectangle = new RectangleShape(new Vector2f(Size.X, Size.Y));
+                rectangle.Texture = Texture;
+
+                RenderTexture.Draw(_rectangleShape, renderStates);
+
+                RenderTexture.Display();
+            }
         }
 
         private void UndoImage_MouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            if (/*!IsTherewindowAboveGivenWindow() &*/ BackHistory.Count > 1)
+            if ( /*!IsTherewindowAboveGivenWindow() &*/ BackHistory.Count > 1)
+            {
                 ForwardHistory.Push(BackHistory.Pop());
+                //ForwardHistory.TrimExcess();
+
+                Texture texture = BackHistory.Peek();
+
+                texture.CopyToImage().SaveToFile(++index + ".bmp");
+
+                _turnShader.SetParameter("texture", texture);
+
+                RenderStates renderStates = new RenderStates(_turnShader);
+                renderStates.Texture = Texture;
+
+                RectangleShape rectangle = new RectangleShape(new Vector2f(Size.X, Size.Y));
+                rectangle.Texture = Texture;
+
+                RenderTexture.Draw(_rectangleShape, renderStates);
+
+                RenderTexture.Display();
+            }
         }
 
         private void BrushesComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
@@ -135,7 +173,10 @@ namespace Paint.GLSL
         {
             window.Draw(_rectangleShape, _brush.RenderStates);
             if (Mouse.IsButtonPressed(Mouse.Button.Left) & window.HasFocus())
-                BackHistory.Peek().Draw(_rectangleShape, _brush.RenderStates);
+            {
+                RenderTexture.Draw(_rectangleShape, _brush.RenderStates);
+                RenderTexture.Display();
+            }
         }
     }
 }

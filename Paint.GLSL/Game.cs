@@ -27,19 +27,15 @@ namespace Paint.GLSL
             this.clearColor = clearColor;
 
 
-            if (RenderTo == RenderTo.Window)
-            {
-                this.window = new RenderWindow(new VideoMode(width, height), title, Styles.Default);
-                window.SetActive(true);
-                window.Position = new Vector2i(window.Position.X, 0);
-                //window.SetFramerateLimit((uint) FrameRateLimit);
-                // Set up events
-                window.Closed += OnClosed;
-                window.Resized += Window_Resized;
-            }
-            else
-                RenderTexture = new RenderTexture(Size.X, Size.Y);
-         
+     
+            this.window = new RenderWindow(new VideoMode(width, height), title, Styles.Default);
+            window.SetActive(true);
+            window.Position = new Vector2i(window.Position.X, 0);
+            //window.SetFramerateLimit((uint) FrameRateLimit);
+            // Set up events
+            window.Closed += OnClosed;
+            window.Resized += Window_Resized;
+  
         }
 
 
@@ -60,8 +56,6 @@ namespace Paint.GLSL
         public abstract void Render();
 
 
-        public RenderTexture RenderTexture;
-
         private int _index;
 
         public void Run()
@@ -75,29 +69,12 @@ namespace Paint.GLSL
             {
                 
                 Update();
+                window.DispatchEvents();
 
-                    if (RenderTo == RenderTo.Window)
-                    {
-                        window.DispatchEvents();
-
-                        window.Clear(clearColor);
-                        Render();
-                        window.Display();
-
-                    }
-                    else
-                    {
-                        RenderTexture.Clear(clearColor);
-                        Render();
-                        Texture texture = RenderTexture.Texture;
-                        Image image = texture.CopyToImage();
-                        image.SaveToFile($"data\\img{_index}.png");
-                        image.Dispose();
-
-                    }
-
-                _index++;
-
+                window.Clear(clearColor);
+                Render();
+                window.Display();
+                
 
                 FPS = 1/(float)_stopwatch.ElapsedMilliseconds*1000;
 
