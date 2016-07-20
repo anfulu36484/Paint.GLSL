@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Documents;
@@ -30,8 +31,8 @@ namespace Paint.GLSL
 
         private BrushBase _brush;
 
-        public Stack<RenderTexture> BackHistory;
-        public Stack<RenderTexture> ForwardHistory; 
+        public HistoryCollection<RenderTexture> BackHistory;
+        public HistoryCollection<RenderTexture> ForwardHistory; 
 
         public Canvas(uint width, uint height, MainWindow mainWindow) 
             : base(width, height, "Canvas", Color.White, RenderTo.Window)
@@ -57,9 +58,9 @@ namespace Paint.GLSL
             _rectangleShape.Texture = Texture;
 
             
-            BackHistory = new Stack<RenderTexture>();
+            BackHistory = new HistoryCollection<RenderTexture>(50);
             BackHistory.Push(new RenderTexture(Size.X, Size.Y));
-            ForwardHistory = new Stack<RenderTexture>();
+            ForwardHistory = new HistoryCollection<RenderTexture>(50);
             _brush = _brushes[0];
 
             _turnShader = new Shader(new MemoryStream(Properties.Resources.VertexShader),
@@ -90,7 +91,6 @@ namespace Paint.GLSL
 
                 _turnShader.SetParameter("texture", texture);
                 renderTexture.Draw(_rectangleShape,renderStates);
-
                 BackHistory.Push(renderTexture);
                 ForwardHistory.Clear();
 
