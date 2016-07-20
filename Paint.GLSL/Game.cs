@@ -16,11 +16,9 @@ namespace Paint.GLSL
         Stopwatch _stopwatch = new Stopwatch();
 
 
-        public int FrameRateLimit = 250;
-
         public RenderTo RenderTo;
 
-        protected Game(uint width, uint height, string title, Color clearColor, RenderTo renderTo)
+        protected Game(uint width, uint height, string title, Color clearColor, uint frameRateLimit, RenderTo renderTo)
         {
             Size = new Vector2u(width,height);
             RenderTo = renderTo;
@@ -32,7 +30,9 @@ namespace Paint.GLSL
                 this.window = new RenderWindow(new VideoMode(width, height), title, Styles.Default);
                 window.SetActive(true);
                 window.Position = new Vector2i(window.Position.X, 0);
-                //window.SetFramerateLimit((uint) FrameRateLimit);
+
+                if (frameRateLimit>0)
+                    window.SetFramerateLimit(frameRateLimit);
                 // Set up events
                 window.Closed += OnClosed;
                 window.Resized += Window_Resized;

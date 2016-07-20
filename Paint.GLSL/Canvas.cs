@@ -25,6 +25,7 @@ namespace Paint.GLSL
         }*/
 
         public readonly MainWindow MainWindow;
+        private readonly int _sizeOfHistory;
 
         public Texture Texture;
         private RectangleShape _rectangleShape;
@@ -34,10 +35,11 @@ namespace Paint.GLSL
         public HistoryCollection<RenderTexture> BackHistory;
         public HistoryCollection<RenderTexture> ForwardHistory; 
 
-        public Canvas(uint width, uint height, MainWindow mainWindow) 
-            : base(width, height, "Canvas", Color.White, RenderTo.Window)
+        public Canvas(uint width, uint height, MainWindow mainWindow, uint frameRateLimit, int sizeOfHistory) 
+            : base(width, height, "Canvas", Color.White, frameRateLimit, RenderTo.Window)
         {
             MainWindow = mainWindow;
+            _sizeOfHistory = sizeOfHistory;
             MainWindow.BrushesComboBox.SelectionChanged += BrushesComboBox_SelectionChanged;
             MainWindow.UndoImage.MouseLeftButtonUp += UndoImage_MouseLeftButtonUp;
             MainWindow.RendoImage.MouseLeftButtonUp += RendoImage_MouseLeftButtonUp;
@@ -58,9 +60,9 @@ namespace Paint.GLSL
             _rectangleShape.Texture = Texture;
 
             
-            BackHistory = new HistoryCollection<RenderTexture>(50);
+            BackHistory = new HistoryCollection<RenderTexture>(_sizeOfHistory);
             BackHistory.Push(new RenderTexture(Size.X, Size.Y));
-            ForwardHistory = new HistoryCollection<RenderTexture>(50);
+            ForwardHistory = new HistoryCollection<RenderTexture>(_sizeOfHistory);
             _brush = _brushes[0];
 
             _turnShader = new Shader(new MemoryStream(Properties.Resources.VertexShader),
@@ -93,9 +95,9 @@ namespace Paint.GLSL
                 renderTexture.Draw(_rectangleShape,renderStates);
                 BackHistory.Push(renderTexture);
                 ForwardHistory.Clear();
-
-    
             }
+            
+
         }
 
         private void RendoImage_MouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -129,6 +131,7 @@ namespace Paint.GLSL
         public override void Update()
         {
             _brush.Update();
+
         }
 
         public override void Render()

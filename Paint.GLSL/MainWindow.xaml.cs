@@ -1,19 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using Paint.GLSL.Brushes;
-using SFML.Graphics;
+using SFML.Window;
+using Window = System.Windows.Window;
 
 namespace Paint.GLSL
 {
@@ -67,26 +59,32 @@ namespace Paint.GLSL
 
         public static volatile List<IntPtr> Handles = new List<IntPtr>();
 
+
+
         private void  CreateNewWindowButton_Click(object sender, RoutedEventArgs e)
         {
-            SizeDialogWindow sizeDialogWindow = new SizeDialogWindow();
-            sizeDialogWindow.Show();
-            sizeDialogWindow.OkButton.Click += (send, eventsArg) =>
+            SettingsWindow settingsWindow = new SettingsWindow();
+            settingsWindow.Show();
+            settingsWindow.OkButton.Click +=(s, o)=>
             {
                 var screenSize = System.Windows.Forms.Screen.PrimaryScreen.Bounds;
 
                 uint width = 0;
                 uint height = 0;
+                uint FPSLimit = 0;
+                int sizeOfHistory = 50;
 
-                try { width = Convert.ToUInt32(sizeDialogWindow.WidthTextBox.Text) ; } catch { }
-                try { height = Convert.ToUInt32(sizeDialogWindow.HeightTextBox.Text); } catch { }
+                try { width = Convert.ToUInt32(settingsWindow.WidthTextBox.Text); } catch { }
+                try { height = Convert.ToUInt32(settingsWindow.HeightTextBox.Text); } catch { }
+                try { FPSLimit = Convert.ToUInt32(settingsWindow.FPSLimitTextBox.Text); } catch { }
+                try { sizeOfHistory = (int)Convert.ToUInt32(settingsWindow.SizeOfTheHistoryTextBox.Text); } catch { }
 
-                if(width==0)  width = (uint)screenSize.Size.Width-50;
-                if(height==0) height = (uint)screenSize.Size.Height-100;
+                if (width == 0) width = (uint)screenSize.Size.Width - 50;
+                if (height == 0) height = (uint)screenSize.Size.Height - 100;
 
                 Task.Factory.StartNew(() =>
                 {
-                    Canvas canvas = new Canvas(width,height, this);
+                    Canvas canvas = new Canvas(width, height, this, FPSLimit, sizeOfHistory);
 
                     List<BrushBase> brushesCollection = new List<BrushBase>
                     {
@@ -113,11 +111,49 @@ namespace Paint.GLSL
                     canvas.AddBrushes(brushesCollection);
                     Handles.Add(canvas.window.SystemHandle);
 
+                    canvas.window.MouseButtonPressed += Window_MouseButtonPressed;
+                    canvas.window.KeyPressed += Window_KeyPressed;
+
                     canvas.Run();
                 });
-                sizeDialogWindow.Close();
+                settingsWindow.Close();
             };
         }
 
+        private void OkButton_Click(object sender, RoutedEventArgs e)
+        {
+
+            
+        }
+
+        void ChangeVisibility()
+        {
+            if (Visibility == Visibility.Visible)
+            {
+                Visibility = Visibility.Hidden;
+                return;
+            }
+            if (Visibility == Visibility.Hidden)
+                Visibility = Visibility.Visible;
+        }
+
+
+        private void Window_KeyPressed(object sender, KeyEventArgs e)
+        {
+            Dispatcher.Invoke(() =>
+            {
+                if (e.Code == Keyboard.Key.Escape)
+                    ChangeVisibility();
+            });
+        }
+
+        private void Window_MouseButtonPressed(object sender, MouseButtonEventArgs e)
+        {
+            Dispatcher.Invoke(() =>
+            {
+                if (e.Button == Mouse.Button.Right)
+                    ChangeVisibility();
+            });
+        }
     }
 }

@@ -15,11 +15,11 @@ using System.Windows.Shapes;
 namespace Paint.GLSL
 {
     /// <summary>
-    /// Interaction logic for SizeDialogWindow.xaml
+    /// Interaction logic for SettingsWindow.xaml
     /// </summary>
-    public partial class SizeDialogWindow : Window
+    public partial class SettingsWindow : Window
     {
-        public SizeDialogWindow()
+        public SettingsWindow()
         {
             InitializeComponent();
         }
