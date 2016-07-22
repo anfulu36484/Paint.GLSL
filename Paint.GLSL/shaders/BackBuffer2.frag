@@ -3,6 +3,7 @@ uniform vec2 resolution;
 uniform sampler2D texture;
 uniform vec2 mouse; 
 uniform float size;
+uniform vec4 input_color;
 
 void main( void ) {
 
@@ -26,7 +27,7 @@ void main( void ) {
 	}
 	
 
-	vec4 color = vec4( xx,xx*0.4,xx, 1.0 );
+	vec4 color =  input_color*xx;
 	
 	
 	vec2 coord = gl_TexCoord[0].st;

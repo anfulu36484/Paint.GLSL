@@ -3,6 +3,7 @@ uniform vec2 resolution;
 uniform sampler2D texture;
 uniform vec2 mouse; 
 uniform float size;
+uniform vec4 input_color;
 
 
 void main( void ) {
@@ -24,6 +25,8 @@ void main( void ) {
 	vec4 color = vec4( xx*sin(cos(time)),xx*cos(time*xx),xx*sin(time), 1.0 );
 	
 	
+	color =  input_color*color;
+
 	vec2 coord = gl_TexCoord[0].st;
 	
     vec4 backpixel = texture2D(texture,  vec2(coord.x,1.0-coord.y));
