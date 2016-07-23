@@ -1,4 +1,5 @@
 ﻿using SFML.Graphics;
+using SFML.System;
 
 namespace Paint.GLSL.Brushes
 {
@@ -9,6 +10,6 @@ namespace Paint.GLSL.Brushes
 
         public RenderStates RenderStates;
 
-        public abstract void Update();
+        public abstract void Update(float sizeOfBrush, Vector2f position, Color color);
     }
 }

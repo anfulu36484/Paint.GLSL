@@ -29,7 +29,7 @@ void main( void ) {
 	
 	color = max(color,backpixel);
 
-	color-=0.002;
+	//color-=0.002;
 	
 	gl_FragColor = color;
 }

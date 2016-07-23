@@ -1,144 +1,73 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Windows;
-using System.Windows.Documents;
 using Paint.GLSL.Brushes;
 using SFML.Graphics;
 using SFML.System;
-using SFML.Window;
 
 namespace Paint.GLSL
 {
     class Canvas :Game
     {
-        /*[DllImport("user32.dll", EntryPoint = "SetWindowLong")]
-        public static extern IntPtr GetNextWindow(IntPtr hWnd, uint wCmd);
-
-
-        public bool IsTherewindowAboveGivenWindow()
-        {
-            IntPtr handle = GetNextWindow(window.SystemHandle, 3);
-            return MainWindow.Handles.Contains(handle);
-        }*/
 
         public readonly MainWindow MainWindow;
-        private readonly int _sizeOfHistory;
+
+        public BrushBase Brush;
 
         public Texture Texture;
-        private RectangleShape _rectangleShape;
+        public RectangleShape RectangleShape;
 
-        private BrushBase _brush;
-
-        public HistoryCollection<RenderTexture> BackHistory;
-        public HistoryCollection<RenderTexture> ForwardHistory; 
+        private IDrawing _drawing;
+        private IDrawing _manualDrawing;
+        private IDrawing _autoDrawing;
 
         public Canvas(uint width, uint height, MainWindow mainWindow, uint frameRateLimit, int sizeOfHistory) 
             : base(width, height, "Canvas", Color.White, frameRateLimit, RenderTo.Window)
         {
             MainWindow = mainWindow;
-            _sizeOfHistory = sizeOfHistory;
-            MainWindow.BrushesComboBox.SelectionChanged += BrushesComboBox_SelectionChanged;
-            MainWindow.UndoImage.MouseLeftButtonUp += UndoImage_MouseLeftButtonUp;
-            MainWindow.RendoImage.MouseLeftButtonUp += RendoImage_MouseLeftButtonUp;
 
-            window.MouseButtonReleased += Window_MouseButtonReleased;
+            RenderTexture renderTexture = new RenderTexture(Size.X,Size.Y);
 
-            
+            _manualDrawing = new ManualDrawing(this, sizeOfHistory,renderTexture);
+            _autoDrawing =new AutoDrawing(this,renderTexture);
+            _drawing = _autoDrawing;
         }
-
-        private Shader _turnShader;
 
 
         public override void Initialize()
         {
             Texture = new Texture(Size.X, Size.Y);
 
-            _rectangleShape = new RectangleShape(new Vector2f(Size.X, Size.Y));
-            _rectangleShape.Texture = Texture;
+            RectangleShape = new RectangleShape(new Vector2f(Size.X, Size.Y));
+            RectangleShape.Texture = Texture;
 
-            
-            BackHistory = new HistoryCollection<RenderTexture>(_sizeOfHistory);
-            BackHistory.Push(new RenderTexture(Size.X, Size.Y));
-            ForwardHistory = new HistoryCollection<RenderTexture>(_sizeOfHistory);
-            _brush = _brushes[0];
+            Brush = Brushes.Values.First();
 
-            _turnShader = new Shader(new MemoryStream(Properties.Resources.VertexShader),
-                new MemoryStream(Properties.Resources.Turn));
-
-            Window_MouseButtonReleased(null, new MouseButtonEventArgs(new MouseButtonEvent())
-            {
-                Button = Mouse.Button.Left,
-            });
-
+            _manualDrawing.Initialize();
+            _autoDrawing.Initialize();
         }
 
 
-        private void Window_MouseButtonReleased(object sender, MouseButtonEventArgs e)
+        public Dictionary<string, BrushBase> Brushes;
+
+        public void AddBrushes(Dictionary<string, BrushBase> brushes)
         {
-            if (e.Button == Mouse.Button.Left)
-            {
-                RenderTexture renderTexture = new RenderTexture(Size.X, Size.Y);
-
-           
-            
-                Texture texture = BackHistory.Peek().Texture;
-
-                RenderStates renderStates = new RenderStates(_turnShader);
-                renderStates.Texture = texture;
-
-                _rectangleShape.Texture = BackHistory.Peek().Texture;
-
-                _turnShader.SetParameter("texture", texture);
-                renderTexture.Draw(_rectangleShape,renderStates);
-                BackHistory.Push(renderTexture);
-                ForwardHistory.Clear();
-            }
-            
-
+            Brushes = brushes;
         }
 
-        private void RendoImage_MouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+
+        public Texture GetBackTexture()
         {
-            if(/*!IsTherewindowAboveGivenWindow() & */ForwardHistory.Count>0)
-                BackHistory.Push(ForwardHistory.Pop());
+            return _drawing.GetBackTexture();
         }
-
-        private void UndoImage_MouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            if (/*!IsTherewindowAboveGivenWindow() &*/ BackHistory.Count > 1)
-                ForwardHistory.Push(BackHistory.Pop());
-        }
-
-        private void BrushesComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
-        {
-            if(_brushes!=null)
-                _brush = _brushes[MainWindow.BrushesComboBox.SelectedIndex ];
-        }
-
-        public override void Load() { }
-
-        private List<BrushBase> _brushes;
-
-        public void AddBrushes(List<BrushBase> brushes)
-        {
-            _brushes = brushes;
-        }
-
 
         public override void Update()
         {
-            _brush.Update();
-
+            _drawing.Update();
         }
 
         public override void Render()
         {
-            window.Draw(_rectangleShape, _brush.RenderStates);
-            if (Mouse.IsButtonPressed(Mouse.Button.Left) & window.HasFocus())
-                BackHistory.Peek().Draw(_rectangleShape, _brush.RenderStates);
+            _drawing.Render();
         }
     }
 }

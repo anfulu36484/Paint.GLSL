@@ -27,14 +27,22 @@ namespace Paint.GLSL.Brushes
             RenderStates.Texture = _canvas.Texture;
         }
 
-        public override void Update()
+        public override void Update(float sizeOfBrush, Vector2f position, Color color)
         {
-            _shader.SetParameter("time", _time);
-            _shader.SetParameter("texture", _canvas.BackHistory.Peek().Texture);
+            /*_shader.SetParameter("time", _time);
+            _shader.SetParameter("texture", _canvas.GetBackTexture());
             _shader.SetParameter("mouse", Mouse.GetPosition(_canvas.window).ConvertToVector2f());
             _shader.SetParameter("size", _canvas.MainWindow.size);
             _shader.SetParameter("resolution", new Vector2f(_canvas.Size.X, _canvas.Size.Y));
             _shader.SetParameter("input_color", _canvas.MainWindow.color);
+            _time += 0.005f;*/
+
+            _shader.SetParameter("time", _time);
+            _shader.SetParameter("texture", _canvas.GetBackTexture());
+            _shader.SetParameter("mouse",position);
+            _shader.SetParameter("size", sizeOfBrush);
+            _shader.SetParameter("resolution", new Vector2f(_canvas.Size.X, _canvas.Size.Y));
+            _shader.SetParameter("input_color", color);
             _time += 0.005f;
         }
 

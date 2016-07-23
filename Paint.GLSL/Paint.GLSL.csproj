@@ -75,9 +75,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AutoDrawing.cs" />
     <Compile Include="Brushes\Brush.cs" />
     <Compile Include="Brushes\BrushBase.cs" />
+    <Compile Include="DrawingData.cs" />
     <Compile Include="HistoryCollection.cs" />
+    <Compile Include="IDrawing.cs" />
+    <Compile Include="ManualDrawing.cs" />
     <Compile Include="SizeDialogWindow.xaml.cs">
       <DependentUpon>SizeDialogWindow.xaml</DependentUpon>
     </Compile>
@@ -126,6 +130,7 @@
     </None>
     <AppDesigner Include="Properties\" />
     <None Include="shaders\BackBuffer11.frag" />
+    <None Include="shaders\BackBuffer111.frag" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -8,7 +8,7 @@ namespace Paint.GLSL
 {
     abstract class Game 
     {
-        public RenderWindow window;
+        public RenderWindow Window;
         protected Color clearColor;
 
         public Vector2u Size;
@@ -27,15 +27,15 @@ namespace Paint.GLSL
 
             if (RenderTo == RenderTo.Window)
             {
-                this.window = new RenderWindow(new VideoMode(width, height), title, Styles.Default);
-                window.SetActive(true);
-                window.Position = new Vector2i(window.Position.X, 0);
+                this.Window = new RenderWindow(new VideoMode(width, height), title, Styles.Default);
+                Window.SetActive(true);
+                Window.Position = new Vector2i(Window.Position.X, 0);
 
                 if (frameRateLimit>0)
-                    window.SetFramerateLimit(frameRateLimit);
+                    Window.SetFramerateLimit(frameRateLimit);
                 // Set up events
-                window.Closed += OnClosed;
-                window.Resized += Window_Resized;
+                Window.Closed += OnClosed;
+                Window.Resized += Window_Resized;
             }
             else
                 RenderTexture = new RenderTexture(Size.X, Size.Y);
@@ -46,12 +46,10 @@ namespace Paint.GLSL
 
         private void Window_Resized(object sender, SizeEventArgs e)
         {
-            window.Size = Size;
+            Window.Size = Size;
 
             //Size = window.Size;
         }
-
-        public abstract void Load();
 
         public abstract void Initialize();
 
@@ -66,7 +64,6 @@ namespace Paint.GLSL
 
         public void Run()
         {
-            Load();
             Initialize();
 
             _stopwatch.Start();
@@ -78,11 +75,11 @@ namespace Paint.GLSL
 
                     if (RenderTo == RenderTo.Window)
                     {
-                        window.DispatchEvents();
+                        Window.DispatchEvents();
 
-                        window.Clear(clearColor);
+                        Window.Clear(clearColor);
                         Render();
-                        window.Display();
+                        Window.Display();
 
                     }
                     else
@@ -102,7 +99,7 @@ namespace Paint.GLSL
                 FPS = 1/(float)_stopwatch.ElapsedMilliseconds*1000;
 
 
-                window.SetTitle($"FPS {FPS:#}");
+                Window.SetTitle($"FPS {FPS:#}");
                 _stopwatch.Restart();
             }
         }
@@ -113,7 +110,7 @@ namespace Paint.GLSL
 
         private void OnClosed(object sender, EventArgs e)
         {
-            window.Close();
+            Window.Close();
         }
 
     }

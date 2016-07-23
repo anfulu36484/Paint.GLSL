@@ -86,7 +86,7 @@ namespace Paint.GLSL
                 {
                     Canvas canvas = new Canvas(width, height, this, FPSLimit, sizeOfHistory);
 
-                    List<BrushBase> brushesCollection = new List<BrushBase>
+                    /*List<BrushBase> brushesCollection = new List<BrushBase>
                     {
                         new Brushes.Brush(canvas,"Brush1",Properties.Resources.BackBuffer1),
                         new Brushes.Brush(canvas,"Brush2",Properties.Resources.BackBuffer2),
@@ -94,7 +94,19 @@ namespace Paint.GLSL
                         new Brushes.Brush(canvas,"Brush4",Properties.Resources.BackBuffer4),
                         new Brushes.Brush(canvas,"Brush5",Properties.Resources.BackBuffer5),
                         new Brushes.Brush(canvas,"Brush6",Properties.Resources.BackBuffer6)
+                    };*/
+            
+
+                    Dictionary<string, BrushBase> brushesCollection =new Dictionary<string, BrushBase>
+                    { 
+                        ["Brush1"]= new Brush(canvas, "Brush1", Properties.Resources.BackBuffer1),
+                        ["Brush2"] = new Brush(canvas, "Brush2", Properties.Resources.BackBuffer2),
+                        ["Brush3"] = new Brush(canvas, "Brush3", Properties.Resources.BackBuffer3),
+                        ["Brush4"] = new Brush(canvas, "Brush4", Properties.Resources.BackBuffer4),
+                        ["Brush5"] = new Brush(canvas, "Brush5", Properties.Resources.BackBuffer5),
+                        ["Brush6"] = new Brush(canvas, "Brush6", Properties.Resources.BackBuffer6)
                     };
+
 
                     Dispatcher.Invoke(() =>
                     {
@@ -103,16 +115,16 @@ namespace Paint.GLSL
                         {
                             foreach (var brush in brushesCollection)
                             {
-                                BrushesComboBox.Items.Add(brush.Name);
+                                BrushesComboBox.Items.Add(brush.Key);
                             }
                             BrushesComboBox.SelectedIndex = 0;
                         }
                     });
                     canvas.AddBrushes(brushesCollection);
-                    Handles.Add(canvas.window.SystemHandle);
+                    Handles.Add(canvas.Window.SystemHandle);
 
-                    canvas.window.MouseButtonPressed += Window_MouseButtonPressed;
-                    canvas.window.KeyPressed += Window_KeyPressed;
+                    canvas.Window.MouseButtonPressed += Window_MouseButtonPressed;
+                    canvas.Window.KeyPressed += Window_KeyPressed;
 
                     canvas.Run();
                 });
