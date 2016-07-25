@@ -17,5 +17,9 @@ namespace Paint.GLSL
         void Render();
 
         Texture GetBackTexture();
+
+        RenderTexture GetBackRenderTexture();
+
+        void SetBackRenderTexture(RenderTexture renderTexture);
     }
 }

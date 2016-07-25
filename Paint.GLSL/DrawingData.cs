@@ -5,10 +5,14 @@ namespace Paint.GLSL
 {
     class DrawingData
     {
-        public readonly string NameOfBrush;
-        public readonly float SizeOfBrush;
-        public readonly Vector2f Position;
-        public readonly Color Color;
+        public string NameOfBrush;
+        public float SizeOfBrush;
+        public Vector2f Position;
+        public Color Color;
+
+        public DrawingData()
+        {
+        }
 
         public DrawingData(string nameOfBrush, float sizeOfBrush, Vector2f position, Color color)
         {

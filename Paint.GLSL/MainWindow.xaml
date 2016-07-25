@@ -14,26 +14,43 @@
                 <Image Name="UndoImage" Source="Resources/undo.png" Width="50" Height="30" />
                 <Image Name="RendoImage" Source="Resources/rendo.png" Width="50" Height="30"></Image>
             </StackPanel>
+
+            <GroupBox Header="Brushes" >
+                <StackPanel>
+
+                    <ComboBox x:Name="BrushesComboBox" Margin="10,10,10,10" />
+                    <StackPanel Orientation="Horizontal">
+                        <Label  Content="Size" Margin="10,0,0,10"/>
+                        <TextBox x:Name="SizeTextBox" Margin="10,0,10,10" Height="22" TextWrapping="Wrap" Text="10" 
+                                 TextChanged="OnSizeChanged" Width="56"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label  Content="Color" Margin="10,0,10,10"/>
+                        <Label  Content="R" Margin="0,0,0,10"/>
+                        <TextBox x:Name="ColorTextBoxRed" Margin="0,0,0,10" Height="22" TextWrapping="Wrap" Text="120" Width="30" TextChanged="OnColorChanged" />
+                        <Label  Content="G" Margin="0,0,0,10"/>
+                        <TextBox x:Name="ColorTextBoxGreen" Margin="0,0,0,10" Height="23" TextWrapping="Wrap" Text="120" Width="30" TextChanged="OnColorChanged"/>
+                        <Label  Content="B" Margin="0,0,0,10"/>
+                        <TextBox x:Name="ColorTextBoxBlue" Margin="0,0,10,10" Height="23" TextWrapping="Wrap" Text="120" Width="30" TextChanged="OnColorChanged"/>
+                    </StackPanel>
+                </StackPanel>
+            </GroupBox>
             
-            
-            <Label Content="Brushes" Margin="10,0"/>
-            <ComboBox x:Name="BrushesComboBox" Margin="10,0,10,10" />
-            <StackPanel Orientation="Horizontal">
-                <Label  Content="Size" Margin="10,0,0,10"/>
-                <TextBox x:Name="SizeTextBox" Margin="10,0,10,10" Height="22" TextWrapping="Wrap" Text="10" 
-                         TextChanged="OnSizeChanged" Width="56"/>
-            </StackPanel>
+   
+            <GroupBox Header="Mode" >
+                <StackPanel>
+                    <RadioButton  Margin="10,10,10,0" Name="ManualRadioButton" Content="Manual" IsChecked="True" GroupName="Mode"/>
+                    <StackPanel Orientation="Horizontal">
+                        <RadioButton GroupName="Mode" Margin="10,10,10,10" Name="AutoRadioButton" Content="Auto" />
+                        <Button Width="50" Height="25" Click="OpenFile_ButtonClick">
+                            File
+                        </Button>
+                    </StackPanel>
+                    
+                </StackPanel>
+            </GroupBox>
 
 
-            <StackPanel Orientation="Horizontal">
-                <Label  Content="Color" Margin="10,0,10,10"/>
-                <Label  Content="R" Margin="0,0,0,10"/>
-                <TextBox x:Name="ColorTextBoxRed" Margin="0,0,0,10" Height="22" TextWrapping="Wrap" Text="120" Width="30" TextChanged="OnColorChanged" />
-                <Label  Content="G" Margin="0,0,0,10"/>
-                <TextBox x:Name="ColorTextBoxGreen" Margin="0,0,0,10" Height="23" TextWrapping="Wrap" Text="120" Width="30" TextChanged="OnColorChanged"/>
-                <Label  Content="B" Margin="0,0,0,10"/>
-                <TextBox x:Name="ColorTextBoxBlue" Margin="0,0,10,10" Height="23" TextWrapping="Wrap" Text="120" Width="30" TextChanged="OnColorChanged"/>
-            </StackPanel>
         </StackPanel>
     </Grid>
 </Window>

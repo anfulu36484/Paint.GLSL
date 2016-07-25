@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using Microsoft.Win32;
 using Paint.GLSL.Brushes;
 using SFML.Window;
 using Window = System.Windows.Window;
@@ -86,16 +88,7 @@ namespace Paint.GLSL
                 {
                     Canvas canvas = new Canvas(width, height, this, FPSLimit, sizeOfHistory);
 
-                    /*List<BrushBase> brushesCollection = new List<BrushBase>
-                    {
-                        new Brushes.Brush(canvas,"Brush1",Properties.Resources.BackBuffer1),
-                        new Brushes.Brush(canvas,"Brush2",Properties.Resources.BackBuffer2),
-                        new Brushes.Brush(canvas,"Brush3",Properties.Resources.BackBuffer3),
-                        new Brushes.Brush(canvas,"Brush4",Properties.Resources.BackBuffer4),
-                        new Brushes.Brush(canvas,"Brush5",Properties.Resources.BackBuffer5),
-                        new Brushes.Brush(canvas,"Brush6",Properties.Resources.BackBuffer6)
-                    };*/
-            
+          
 
                     Dictionary<string, BrushBase> brushesCollection =new Dictionary<string, BrushBase>
                     { 
@@ -132,12 +125,6 @@ namespace Paint.GLSL
             };
         }
 
-        private void OkButton_Click(object sender, RoutedEventArgs e)
-        {
-
-            
-        }
-
         void ChangeVisibility()
         {
             if (Visibility == Visibility.Visible)
@@ -166,6 +153,40 @@ namespace Paint.GLSL
                 if (e.Button == Mouse.Button.Right)
                     ChangeVisibility();
             });
+        }
+
+
+        public event EventHandler DrawingDataIsLoaded;
+
+        private void OpenFile_ButtonClick(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            bool? result = openFileDialog.ShowDialog();
+
+            if (result.HasValue)
+            {
+                DataReader dataReader = new DataReader();
+                List<DrawingData> list = new List<DrawingData>();
+
+                try{ list=dataReader.ReadFile(openFileDialog.FileName); }
+                catch (Exception ex) {  MessageBox.Show(ex.Message); }
+                
+                if(list.Count>0)
+                    DrawingDataIsLoaded?.Invoke(this,new EventsArgDrawingData(list));
+            }
+                
+
+
+        }
+    }
+
+    class EventsArgDrawingData : EventArgs
+    {
+        public List<DrawingData> DrawingDataList;
+
+        public EventsArgDrawingData(List<DrawingData> drawingDataList)
+        {
+            DrawingDataList = drawingDataList;
         }
     }
 }

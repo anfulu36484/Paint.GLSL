@@ -1,4 +1,6 @@
 ﻿using System.IO;
+using System.Linq;
+using Paint.GLSL.Brushes;
 using SFML.Graphics;
 using SFML.Window;
 
@@ -29,6 +31,8 @@ namespace Paint.GLSL
             _canvas.Window.MouseButtonReleased += Window_MouseButtonReleased;
         }
 
+        private BrushBase _brush;
+
         public void Initialize()
         {
             BackHistory = new HistoryCollection<RenderTexture>(_sizeOfHistory);
@@ -42,6 +46,8 @@ namespace Paint.GLSL
             {
                 Button = Mouse.Button.Left,
             });
+
+            _brush = _canvas.Brushes.Values.First();
         }
 
         private void Window_MouseButtonReleased(object sender, MouseButtonEventArgs e)
@@ -69,6 +75,16 @@ namespace Paint.GLSL
             return BackHistory.Peek().Texture;
         }
 
+        public RenderTexture GetBackRenderTexture()
+        {
+            return BackHistory.Pop();
+        }
+
+        public void SetBackRenderTexture(RenderTexture renderTexture)
+        {
+            BackHistory.Push(renderTexture);
+        }
+
         private void RendoImage_MouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             if (/*!IsTherewindowAboveGivenWindow() & */ForwardHistory.Count > 0)
@@ -84,12 +100,12 @@ namespace Paint.GLSL
         private void BrushesComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
             if (_canvas.Brushes != null)
-                _canvas.Brush = _canvas.Brushes[_canvas.MainWindow.BrushesComboBox.Text];
+                _brush = _canvas.Brushes[_canvas.MainWindow.BrushesComboBox.Text];
         }
 
         public void Update()
         {
-            _canvas.Brush.Update(
+            _brush.Update(
                 _canvas.MainWindow.size,
                 Mouse.GetPosition(_canvas.Window).ConvertToVector2f(),
                 _canvas.MainWindow.color);
@@ -97,9 +113,9 @@ namespace Paint.GLSL
 
         public void Render()
         {
-            _canvas.Window.Draw(_canvas.RectangleShape, _canvas.Brush.RenderStates);
+            _canvas.Window.Draw(_canvas.RectangleShape, _brush.RenderStates);
             if (Mouse.IsButtonPressed(Mouse.Button.Left) & _canvas.Window.HasFocus())
-                BackHistory.Peek().Draw(_canvas.RectangleShape, _canvas.Brush.RenderStates);
+                BackHistory.Peek().Draw(_canvas.RectangleShape, _brush.RenderStates);
         }
     }
 }

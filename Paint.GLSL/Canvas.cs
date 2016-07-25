@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using Paint.GLSL.Brushes;
 using SFML.Graphics;
 using SFML.System;
@@ -10,8 +9,6 @@ namespace Paint.GLSL
     {
 
         public readonly MainWindow MainWindow;
-
-        public BrushBase Brush;
 
         public Texture Texture;
         public RectangleShape RectangleShape;
@@ -24,14 +21,27 @@ namespace Paint.GLSL
             : base(width, height, "Canvas", Color.White, frameRateLimit, RenderTo.Window)
         {
             MainWindow = mainWindow;
+            mainWindow.DrawingDataIsLoaded += MainWindow_DrawingDataIsLoaded;
 
-            RenderTexture renderTexture = new RenderTexture(Size.X,Size.Y);
+            _manualDrawing = new ManualDrawing(this, sizeOfHistory, new RenderTexture(Size.X, Size.Y));
+            _autoDrawing =new AutoDrawing(this, new RenderTexture(Size.X, Size.Y));
+            _drawing = _manualDrawing;
 
-            _manualDrawing = new ManualDrawing(this, sizeOfHistory,renderTexture);
-            _autoDrawing =new AutoDrawing(this,renderTexture);
-            _drawing = _autoDrawing;
+            ((AutoDrawing) _autoDrawing).EndOfTheListOfDrawingDataReached += Canvas_EndOfTheListOfDrawingDataReached;
         }
 
+        private void Canvas_EndOfTheListOfDrawingDataReached(object sender, System.EventArgs e)
+        {
+            _drawing = _manualDrawing;
+            _manualDrawing.SetBackRenderTexture(_autoDrawing.GetBackRenderTexture());
+        }
+
+        private void MainWindow_DrawingDataIsLoaded(object sender, System.EventArgs e)
+        {
+            _drawing = _autoDrawing;
+            _autoDrawing.SetBackRenderTexture(_manualDrawing.GetBackRenderTexture());
+            ((AutoDrawing)_autoDrawing).AddDrawingData(((EventsArgDrawingData)e).DrawingDataList);
+        }
 
         public override void Initialize()
         {
@@ -39,8 +49,6 @@ namespace Paint.GLSL
 
             RectangleShape = new RectangleShape(new Vector2f(Size.X, Size.Y));
             RectangleShape.Texture = Texture;
-
-            Brush = Brushes.Values.First();
 
             _manualDrawing.Initialize();
             _autoDrawing.Initialize();
