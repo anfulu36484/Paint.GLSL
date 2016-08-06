@@ -42,22 +42,6 @@ namespace Paint.GLSL
             
         }
 
-        private void OnColorChanged(object sender, TextChangedEventArgs e)
-        {
-            try
-            {
-                color = new SFML.Graphics.Color(
-                Convert.ToByte(ColorTextBoxRed.Text),
-                Convert.ToByte(ColorTextBoxGreen.Text),
-                Convert.ToByte(ColorTextBoxBlue.Text));
-            }
-            catch (Exception)
-            {
-
-            }
-            
-        }
-
 
         public static volatile List<IntPtr> Handles = new List<IntPtr>();
 
@@ -177,6 +161,14 @@ namespace Paint.GLSL
                 
 
 
+        }
+
+        private void ClrPcker_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<System.Windows.Media.Color?> e)
+        {
+            color = new SFML.Graphics.Color(
+                Convert.ToByte(ClrPcker.SelectedColor.Value.R),
+                Convert.ToByte(ClrPcker.SelectedColor.Value.G),
+                Convert.ToByte(ClrPcker.SelectedColor.Value.B));
         }
     }
 
