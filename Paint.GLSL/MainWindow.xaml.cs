@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -103,10 +104,22 @@ namespace Paint.GLSL
                     canvas.Window.MouseButtonPressed += Window_MouseButtonPressed;
                     canvas.Window.KeyPressed += Window_KeyPressed;
 
+                    ((AutoDrawing)canvas.AutoDrawing).EndOfTheListOfDrawingDataReached += MainWindow_EndOfTheListOfDrawingDataReached;
+
                     canvas.Run();
                 });
                 settingsWindow.Close();
             };
+        }
+
+        private void MainWindow_EndOfTheListOfDrawingDataReached(object sender, EventArgs e)
+        {
+            Dispatcher.Invoke(() =>
+            {
+                ManualRadioButton.IsEnabled = true;
+                ManualRadioButton.IsChecked = true;
+                OpenFileButton.IsEnabled = false;
+            });
         }
 
         void ChangeVisibility()
@@ -145,6 +158,9 @@ namespace Paint.GLSL
         private void OpenFile_ButtonClick(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "TXT Files|*.txt";
+            openFileDialog.InitialDirectory = Directory.GetCurrentDirectory();
+
             bool? result = openFileDialog.ShowDialog();
 
             if (result.HasValue)
@@ -154,9 +170,12 @@ namespace Paint.GLSL
 
                 try{ list=dataReader.ReadFile(openFileDialog.FileName); }
                 catch (Exception ex) {  MessageBox.Show(ex.Message); }
-                
-                if(list.Count>0)
-                    DrawingDataIsLoaded?.Invoke(this,new EventsArgDrawingData(list));
+
+                if (list.Count > 0)
+                {
+                    ManualRadioButton.IsEnabled = false;
+                    DrawingDataIsLoaded?.Invoke(this, new EventsArgDrawingData(list));
+                }
             }
                 
 
@@ -169,6 +188,17 @@ namespace Paint.GLSL
                 Convert.ToByte(ClrPcker.SelectedColor.Value.R),
                 Convert.ToByte(ClrPcker.SelectedColor.Value.G),
                 Convert.ToByte(ClrPcker.SelectedColor.Value.B));
+        }
+
+        private void AutoRadioButton_Checked(object sender, RoutedEventArgs e)
+        {
+            OpenFileButton.IsEnabled = true;
+        }
+
+        private void ManualRadioButton_Checked(object sender, RoutedEventArgs e)
+        {
+            if(OpenFileButton!=null)
+                OpenFileButton.IsEnabled = false;
         }
     }
 

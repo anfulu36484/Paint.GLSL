@@ -15,7 +15,7 @@ namespace Paint.GLSL
 
         private IDrawing _drawing;
         private IDrawing _manualDrawing;
-        private IDrawing _autoDrawing;
+        public IDrawing AutoDrawing;
 
         public Canvas(uint width, uint height, MainWindow mainWindow, uint frameRateLimit, int sizeOfHistory) 
             : base(width, height, "Canvas", Color.White, frameRateLimit, RenderTo.Window)
@@ -24,23 +24,23 @@ namespace Paint.GLSL
             mainWindow.DrawingDataIsLoaded += MainWindow_DrawingDataIsLoaded;
 
             _manualDrawing = new ManualDrawing(this, sizeOfHistory, new RenderTexture(Size.X, Size.Y));
-            _autoDrawing =new AutoDrawing(this, new RenderTexture(Size.X, Size.Y));
+            AutoDrawing =new AutoDrawing(this, new RenderTexture(Size.X, Size.Y));
             _drawing = _manualDrawing;
 
-            ((AutoDrawing) _autoDrawing).EndOfTheListOfDrawingDataReached += Canvas_EndOfTheListOfDrawingDataReached;
+            ((AutoDrawing) AutoDrawing).EndOfTheListOfDrawingDataReached += Canvas_EndOfTheListOfDrawingDataReached;
         }
 
         private void Canvas_EndOfTheListOfDrawingDataReached(object sender, System.EventArgs e)
         {
             _drawing = _manualDrawing;
-            _manualDrawing.SetBackRenderTexture(_autoDrawing.GetBackRenderTexture());
+            _manualDrawing.SetBackRenderTexture(AutoDrawing.GetBackRenderTexture());
         }
 
         private void MainWindow_DrawingDataIsLoaded(object sender, System.EventArgs e)
         {
-            _drawing = _autoDrawing;
-            _autoDrawing.SetBackRenderTexture(_manualDrawing.GetBackRenderTexture());
-            ((AutoDrawing)_autoDrawing).AddDrawingData(((EventsArgDrawingData)e).DrawingDataList);
+            _drawing = AutoDrawing;
+            AutoDrawing.SetBackRenderTexture(_manualDrawing.GetBackRenderTexture());
+            ((AutoDrawing)AutoDrawing).AddDrawingData(((EventsArgDrawingData)e).DrawingDataList);
         }
 
         public override void Initialize()
@@ -51,7 +51,7 @@ namespace Paint.GLSL
             RectangleShape.Texture = Texture;
 
             _manualDrawing.Initialize();
-            _autoDrawing.Initialize();
+            AutoDrawing.Initialize();
         }
 
 

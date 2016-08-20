@@ -36,10 +36,10 @@
    
             <GroupBox Header="Mode" >
                 <StackPanel>
-                    <RadioButton  Margin="10,10,10,0" Name="ManualRadioButton" Content="Manual" IsChecked="True" GroupName="Mode"/>
+                    <RadioButton  Margin="10,10,10,0" Name="ManualRadioButton" Content="Manual" IsChecked="True" GroupName="Mode" Checked="ManualRadioButton_Checked"/>
                     <StackPanel Orientation="Horizontal">
-                        <RadioButton GroupName="Mode" Margin="10,10,10,10" Name="AutoRadioButton" Content="Auto" />
-                        <Button Width="50" Height="25" Click="OpenFile_ButtonClick">
+                        <RadioButton GroupName="Mode" Margin="10,10,10,10" Name="AutoRadioButton" Content="Auto" Checked="AutoRadioButton_Checked"  />
+                        <Button IsEnabled="False" Name="OpenFileButton" Width="50" Height="25" Click="OpenFile_ButtonClick">
                             File
                         </Button>
                     </StackPanel>
